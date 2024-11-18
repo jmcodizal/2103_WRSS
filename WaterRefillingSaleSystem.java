@@ -16,22 +16,21 @@ public class WaterRefillingSaleSystem {
             scanner.nextLine();  
 
             switch (option) {
-                case 1:
-                   
+                case 1 -> {
                     System.out.println("Entering Customer Panel...");
                     CustomerPanel customerPanel = new CustomerPanel(scanner, system);
                     customerPanel.showMenu();
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     // Admin Panel
                     System.out.println("Entering Admin Panel...");
                     AdminPanel adminPanel = new AdminPanel(scanner, system);
                     adminPanel.showMenu();
-                    break;
-                default:
-                    System.out.println("Invalid option. Please try again.");
+                }
+                default -> System.out.println("Invalid option. Please try again.");
             }
         }
     }
 }
+
 
