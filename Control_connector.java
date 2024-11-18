@@ -1,25 +1,18 @@
 
 package DBConnector;
-import java.sql.Connection;
+import java.sql.*;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 
 public class Control_connector {
-    private static Control_connector connection;
-    private static Control_connector dbconec;
-    
-    private static String url = "jdbc:mysql://localhost:database_wrss";
-    private static String user = "root";
-    private static String password = "";
-    
-    public Control_connector(){
-        connection = null;
-        
+    public static Connection getCon() {
         try {
-            DriverManager.getConnection(url, user, password);
-        } catch (SQLException e) { 
-             System.out.println("Connection failed!");
-            e.printStackTrace();
-        } 
+           Class.forName("com.mysql.jdbc.Driver");
+           Connection con= DriverManager.getConnection("jdbc:mysql://localhost:3306/wrss?zeroDateTimeBehavior=CONVERT_TO_NULL", "root", "");
+           return con;
+        }
+        catch(Exception e) {
+
+        return null;
+        }
     }
 }
