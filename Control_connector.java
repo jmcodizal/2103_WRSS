@@ -8,7 +8,7 @@ public class Control_connector {
     private static Control_connector connection;
     private static Control_connector dbconec;
     
-    private static String url = "jdbc:mysql://localhost:waterrefilling03";
+    private static String url = "jdbc:mysql://localhost:database_wrss";
     private static String user = "root";
     private static String password = "";
     
