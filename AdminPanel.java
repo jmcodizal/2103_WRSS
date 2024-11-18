@@ -3,6 +3,8 @@ package waterrefillingsalesystem;
 
 import java.util.Scanner;
 import javax.swing.JFrame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 public class AdminPanel extends JFrame {
@@ -34,11 +36,11 @@ public class AdminPanel extends JFrame {
     }
 
     AdminPanel(Scanner scanner, WaterRefillingSystem system) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        throw new UnsupportedOperationException("Not supported yet."); 
     }
 
     void showMenu() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
 
