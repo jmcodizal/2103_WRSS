@@ -23,28 +23,18 @@ public class AdminPanel {
             System.out.print("Select an option: ");
             
             int option = scanner.nextInt();
-            scanner.nextLine();  // Consume newline character
+            scanner.nextLine();  
 
             switch (option) {
-                case 1:
-                    System.out.println("Total Walk-in Customers: " + system.getWalkInCount());
-                    break;
-                case 2:
-                    System.out.println("Total Delivery Customers: " + system.getDeliveryCount());
-                    break;
-                case 3:
-                    System.out.println("Deliveries by Barangay: " + system.getDeliveriesByBarangay());
-                    break;
-                case 4:
-                    System.out.println("Total Sales: " + system.getTotalSales());
-                    break;
-                case 5:
-                    system.summaryByContainer();
-                    break;
-                case 6:
-                    return; 
-                default:
-                    System.out.println("Invalid option. Please try again.");
+                case 1 -> System.out.println("Total Walk-in Customers: " + system.getWalkInCount());
+                case 2 -> System.out.println("Total Delivery Customers: " + system.getDeliveryCount());
+                case 3 -> System.out.println("Deliveries by Barangay: " + system.getDeliveriesByBarangay());
+                case 4 -> System.out.println("Total Sales: " + system.getTotalSales());
+                case 5 -> system.summaryByContainer();
+                case 6 -> {
+                    return;
+                }
+                default -> System.out.println("Invalid option. Please try again.");
             }
         }
     }

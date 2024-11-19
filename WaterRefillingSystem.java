@@ -26,9 +26,9 @@ public class WaterRefillingSystem {
     private void recordSale(Customer customer) {
         double price = 0;
         switch (customer.getContainerType()) {
-            case "Small": price = 20.0; break;
-            case "Medium": price = 30.0; break;
-            case "Large": price = 40.0; break;
+            case "Small" -> price = 20.0;
+            case "Medium" -> price = 30.0;
+            case "Large" -> price = 40.0;
         }
         price *= customer.getQuantity();
 

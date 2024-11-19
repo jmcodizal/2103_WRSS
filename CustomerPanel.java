@@ -25,42 +25,42 @@ public class CustomerPanel {
             System.out.println("5. Cancel Order");
             System.out.print("Select an option: ");
             int option = scanner.nextInt();
-            scanner.nextLine(); // Consume newline character
+            scanner.nextLine(); 
 
             switch (option) {
-                case 1:
+                case 1 -> {
                     System.out.print("Enter Customer Name: ");
                     name = scanner.nextLine();
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     System.out.println("Select Barangay Address (Población 1 - 12): ");
                     for (int i = 1; i <= 12; i++) {
                         System.out.println("[" + i + "] Población " + i);
                     }
                     int barangayChoice = scanner.nextInt();
-                    scanner.nextLine(); // Consume newline character
+                    scanner.nextLine();
                     if (barangayChoice >= 1 && barangayChoice <= 12) {
                         address = "Población " + barangayChoice;
                     } else {
                         System.out.println("Invalid barangay choice.");
                         continue; 
                     }
-                    break;
-                case 3:
+                }
+                case 3 -> {
                     containerType = selectContainer(scanner);
                     System.out.print("Enter Quantity: ");
                     quantity = scanner.nextInt();
-                    scanner.nextLine(); // Consume newline character
-                    break;
-                case 4:
-                    paymentMethod = selectPaymentMethod(scanner, gcashNumber, gcashName, gcashAmount);
-                    break;
-                case 5:
+                    scanner.nextLine();
+                }
+                case 4 -> paymentMethod = selectPaymentMethod(scanner, gcashNumber, gcashName, gcashAmount);
+                case 5 -> {
                     System.out.println("Order has been canceled.");
-                    return; 
-                default:
+                    return;
+                }
+                default -> {
                     System.out.println("Invalid option. Please try again.");
                     continue; 
+                }
             }
 
             if (isValidOrder(name, address, containerType, paymentMethod)) {
@@ -70,11 +70,11 @@ public class CustomerPanel {
             }
         }
 
-        // Option to repeat or return to main menu
+        
         System.out.print("Do you want to make another order? (yes/no): ");
         String repeatOrder = scanner.nextLine();
         if (repeatOrder.equalsIgnoreCase("yes")) {
-            showMenu(); // Recurse to allow placing another order
+            showMenu(); 
         }
     }
 
@@ -88,14 +88,21 @@ public class CustomerPanel {
         System.out.println("[2] Medium - P30.00");
         System.out.println("[3] Large - P40.00");
         int containerChoice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline character
+        scanner.nextLine(); 
         switch (containerChoice) {
-            case 1: return "Small";
-            case 2: return "Medium";
-            case 3: return "Large";
-            default: 
+            case 1 -> {
+                return "Small";
+            }
+            case 2 -> { 
+                return "Medium";
+            }
+            case 3 -> {
+                return "Large";
+            }
+            default -> {
                 System.out.println("Invalid container choice.");
-                return selectContainer(scanner); // Recursive call to reselect container
+                return selectContainer(scanner); 
+            }
         }
     }
 
@@ -105,11 +112,15 @@ public class CustomerPanel {
         System.out.println("[2] Cash on Pick-Up");
         System.out.println("[3] GCash");
         int paymentChoice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline character
+        scanner.nextLine(); 
         switch (paymentChoice) {
-            case 1: return "Cash on Delivery";
-            case 2: return "Cash on Pick-Up";
-            case 3:
+            case 1 -> {
+                return "Cash on Delivery";
+            }
+            case 2 -> {
+                return "Cash on Pick-Up";
+            }
+            case 3 -> {
                 System.out.print("Enter GCash Number: ");
                 gcashNumber = scanner.nextLine();
                 System.out.print("Enter GCash Name: ");
@@ -118,9 +129,11 @@ public class CustomerPanel {
                 gcashAmount = scanner.nextInt();
                 scanner.nextLine();  
                 return "GCash";
-            default:
+            }
+            default -> {
                 System.out.println("Invalid payment option.");
                 return selectPaymentMethod(scanner, gcashNumber, gcashName, gcashAmount);
+            }
         }
     }
 }
