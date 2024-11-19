@@ -33,14 +33,14 @@ public class CustomerPanel {
                     name = scanner.nextLine();
                 }
                 case 2 -> {
-                    System.out.println("Select Barangay Address (Población 1 - 12): ");
+                    System.out.println("Select Barangay Address (Poblacion 1 - 12): ");
                     for (int i = 1; i <= 12; i++) {
-                        System.out.println("[" + i + "] Población " + i);
+                        System.out.println("[" + i + "] Poblacion " + i);
                     }
                     int barangayChoice = scanner.nextInt();
                     scanner.nextLine();
                     if (barangayChoice >= 1 && barangayChoice <= 12) {
-                        address = "Población " + barangayChoice;
+                        address = "Poblacion " + barangayChoice;
                     } else {
                         System.out.println("Invalid barangay choice.");
                         continue; 
@@ -66,12 +66,12 @@ public class CustomerPanel {
             if (isValidOrder(name, address, containerType, paymentMethod)) {
                 validOrder = true; 
                 system.addCustomer(new Customer(name, address, containerType, paymentMethod, gcashNumber, gcashName, gcashAmount, quantity));
-                System.out.println("Your order is placed successfully!");
+                System.out.println("Your refill order is placed successfully!");
             }
         }
 
         
-        System.out.print("Do you want to make another order? (yes/no): ");
+        System.out.print("Do you want to make another refill order? (yes/no): ");
         String repeatOrder = scanner.nextLine();
         if (repeatOrder.equalsIgnoreCase("yes")) {
             showMenu(); 
@@ -87,6 +87,7 @@ public class CustomerPanel {
         System.out.println("[1] Small - P20.00");
         System.out.println("[2] Medium - P30.00");
         System.out.println("[3] Large - P40.00");
+        System.out.println("[4] Extra Large - P50.00");
         int containerChoice = scanner.nextInt();
         scanner.nextLine(); 
         switch (containerChoice) {
@@ -98,6 +99,9 @@ public class CustomerPanel {
             }
             case 3 -> {
                 return "Large";
+            }
+            case 4 -> {
+                return "Extra Large";
             }
             default -> {
                 System.out.println("Invalid container choice.");

@@ -22,14 +22,18 @@ public class Customer {
         this.gcashName = gcashName;
         this.gcashAmount = gcashAmount;
         this.quantity = quantity;
+        
+        
     }
 
-    
+    public String getName() {
+        return name;
+    }
+
     public String getAddress() {
         return address;
     }
 
-   
     public String getContainerType() {
         return containerType;
     }
@@ -38,11 +42,20 @@ public class Customer {
         return paymentMethod;
     }
 
+    public String getGcashNumber() {
+        return gcashNumber;
+    }
+
+    public String getGcashName() {
+        return gcashName;
+    }
+
     public int getGcashAmount() {
         return gcashAmount;
     }
-
+    
     public int getQuantity() {
         return quantity;
     }
+    
 }

@@ -1,20 +1,20 @@
 
 package waterrefillingsalesystem;
 
-import java.util.List;
 import java.util.Map;
+import java.util.List;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashMap; 
 
 public class WaterRefillingSystem {
     private final List<Customer> customers;
     private final Map<String, Integer> deliveries;
-    private double totalSales;
+    private double OverallSales;
 
     public WaterRefillingSystem() {
         customers = new ArrayList<>();
         deliveries = new HashMap<>();
-        totalSales = 0.0;
+        OverallSales = 0.0;
     }
 
     public void addCustomer(Customer customer) {
@@ -26,9 +26,10 @@ public class WaterRefillingSystem {
     private void recordSale(Customer customer) {
         double price = 0;
         switch (customer.getContainerType()) {
-            case "Small" -> price = 20.0;
-            case "Medium" -> price = 30.0;
-            case "Large" -> price = 40.0;
+            case "Small" -> price = 20.00;
+            case "Medium" -> price = 30.00;
+            case "Large" -> price = 40.00;
+            case "Extra Large" -> price = 50.00;
         }
         price *= customer.getQuantity();
 
@@ -42,7 +43,7 @@ public class WaterRefillingSystem {
             }
             price = amountPaid;
         }
-        totalSales += price;
+        OverallSales += price;
         System.out.println("Sale recorded: P" + price);
     }
 
@@ -55,15 +56,15 @@ public class WaterRefillingSystem {
     }
 
     public int getDeliveryCount() {
-        return (int) customers.stream().filter(c -> c.getPaymentMethod().equals("Cash on Delivery")).count();
+       return (int) customers.stream().filter(c -> c.getPaymentMethod().equals("Cash On Delivery")).count();
     }
 
-    public Map<String, Integer> getDeliveriesByBarangay() {
+    public Map<String, Integer> getDeliveriesPerBarangay() {
         return deliveries;
     }
 
-    public double getTotalSales() {
-        return totalSales;
+    public double getOverallSales() {
+        return OverallSales;
     }
 
     public void summaryByContainer() {
