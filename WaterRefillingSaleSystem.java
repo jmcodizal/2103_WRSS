@@ -1,9 +1,25 @@
+
 package waterrefillingsalesystem;
 
 import java.util.Scanner;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class WaterRefillingSaleSystem {
     public static void main(String[] args) {
+        String url = "jdbc:mysql://localhost/waterrefilling03";
+        String user = "root";
+        String password = "";
+        
+        try {
+            Connection conn = DriverManager.getConnection(url, user, password);
+            System.out.println("Connected to the MySQL database");
+        } catch (SQLException e){
+            System.out.println("Connection failed!");
+            e.printStackTrace();
+        }
+        
         Scanner scanner = new Scanner(System.in);
         WaterRefillingSystem system = new WaterRefillingSystem();
 
@@ -13,24 +29,27 @@ public class WaterRefillingSaleSystem {
             System.out.print("Select an option: ");
             
             int option = scanner.nextInt();
-            scanner.nextLine();  
+            scanner.nextLine();  // Consume newline character
 
             switch (option) {
-                case 1 -> {
+                case 1:
+                    // Customer Panel
                     System.out.println("Entering Customer Panel...");
                     CustomerPanel customerPanel = new CustomerPanel(scanner, system);
                     customerPanel.showMenu();
-                }
-                case 2 -> {
+                    break;
+                case 2:
                     // Admin Panel
                     System.out.println("Entering Admin Panel...");
                     AdminPanel adminPanel = new AdminPanel(scanner, system);
                     adminPanel.showMenu();
-                }
-                default -> System.out.println("Invalid option. Please try again.");
+                    break;
+                default:
+                    System.out.println("Invalid option. Please try again.");
             }
         }
     }
 }
+
 
 

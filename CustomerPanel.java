@@ -1,26 +1,20 @@
+
 package waterrefillingsalesystem;
 
 import java.util.Scanner;
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class CustomerPanel extends JFrame {
+public class CustomerPanel {
     private final Scanner scanner;
     private final WaterRefillingSystem system;
 
     public CustomerPanel(Scanner scanner, WaterRefillingSystem system) {
         this.scanner = scanner;
         this.system = system;
-        setTitle("Customer Panel");
-        setSize(400, 300);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    // Method to show the menu for customers to place orders
     public void showMenu() {
         String name = "", address = "", containerType = "", paymentMethod = "", gcashNumber = "", gcashName = "";
-        int gcashAmount = 0, quantity = 0;
+        int gcashAmount = 0, quantity = 0;  
         boolean validOrder = false;
 
         while (!validOrder) {
@@ -49,7 +43,7 @@ public class CustomerPanel extends JFrame {
                         address = "Población " + barangayChoice;
                     } else {
                         System.out.println("Invalid barangay choice.");
-                        continue;
+                        continue; 
                     }
                     break;
                 case 3:
@@ -63,14 +57,14 @@ public class CustomerPanel extends JFrame {
                     break;
                 case 5:
                     System.out.println("Order has been canceled.");
-                    return;
+                    return; 
                 default:
                     System.out.println("Invalid option. Please try again.");
-                    continue;
+                    continue; 
             }
 
             if (isValidOrder(name, address, containerType, paymentMethod)) {
-                validOrder = true;
+                validOrder = true; 
                 system.addCustomer(new Customer(name, address, containerType, paymentMethod, gcashNumber, gcashName, gcashAmount, quantity));
                 System.out.println("Your order is placed successfully!");
             }
@@ -96,13 +90,10 @@ public class CustomerPanel extends JFrame {
         int containerChoice = scanner.nextInt();
         scanner.nextLine(); // Consume newline character
         switch (containerChoice) {
-            case 1:
-                return "Small";
-            case 2:
-                return "Medium";
-            case 3:
-                return "Large";
-            default:
+            case 1: return "Small";
+            case 2: return "Medium";
+            case 3: return "Large";
+            default: 
                 System.out.println("Invalid container choice.");
                 return selectContainer(scanner); // Recursive call to reselect container
         }
@@ -116,10 +107,8 @@ public class CustomerPanel extends JFrame {
         int paymentChoice = scanner.nextInt();
         scanner.nextLine(); // Consume newline character
         switch (paymentChoice) {
-            case 1:
-                return "Cash on Delivery";
-            case 2:
-                return "Cash on Pick-Up";
+            case 1: return "Cash on Delivery";
+            case 2: return "Cash on Pick-Up";
             case 3:
                 System.out.print("Enter GCash Number: ");
                 gcashNumber = scanner.nextLine();
@@ -127,23 +116,12 @@ public class CustomerPanel extends JFrame {
                 gcashName = scanner.nextLine();
                 System.out.print("Enter Amount: ");
                 gcashAmount = scanner.nextInt();
-                scanner.nextLine(); // Consume newline
+                scanner.nextLine();  
                 return "GCash";
             default:
                 System.out.println("Invalid payment option.");
                 return selectPaymentMethod(scanner, gcashNumber, gcashName, gcashAmount);
         }
     }
-
-    @Override
-    public void setVisible(boolean b) {
-        super.setVisible(b);
-    }
-
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        WaterRefillingSystem system = new WaterRefillingSystem();
-        CustomerPanel customerPanel = new CustomerPanel(scanner, system);
-        customerPanel.setVisible(true);
-    }
 }
+

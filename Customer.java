@@ -1,3 +1,4 @@
+
 package waterrefillingsalesystem;
 
 public class Customer {
@@ -10,7 +11,7 @@ public class Customer {
     private final int gcashAmount;
     private final int quantity;
 
-    // Constructor
+   
     public Customer(String name, String address, String containerType, String paymentMethod, String gcashNumber, 
                     String gcashName, int gcashAmount, int quantity) {
         this.name = name;
@@ -23,12 +24,12 @@ public class Customer {
         this.quantity = quantity;
     }
 
-    // Getter for address
+    
     public String getAddress() {
         return address;
     }
 
-    // Other getters
+   
     public String getContainerType() {
         return containerType;
     }
@@ -45,4 +46,3 @@ public class Customer {
         return quantity;
     }
 }
-
