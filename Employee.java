@@ -2,20 +2,20 @@
 package waterrefillingsalesystem;
 
 public class Employee {
-    public String EmployeeDesk;
+    public String EmployeeRefilling;
     public String EmployeeDelivered;
 
-    public Employee(String EmployeeDesk, String EmployeeDelivered) {
-        this.EmployeeDesk = EmployeeDesk;
+    public Employee(String EmployeeRefilling, String EmployeeDelivered) {
+        this.EmployeeRefilling = EmployeeRefilling;
         this.EmployeeDelivered = EmployeeDelivered;
     }
 
-    public String getEmployeeDesk() {
-        return EmployeeDesk;
+    public String getEmployeeRefilling() {
+        return EmployeeRefilling;
     }
 
-    public void setEmployeeDesk(String EmployeeDesk) {
-        this.EmployeeDesk = EmployeeDesk;
+    public void setEmployeeRefilling(String EmployeeRefilling) {
+        this.EmployeeRefilling = EmployeeRefilling;
     }
 
     public String getEmployeeDelivered() {
