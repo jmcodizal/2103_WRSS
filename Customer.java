@@ -1,61 +1,50 @@
-
 package waterrefillingsalesystem;
 
 public class Customer {
-    private final String name;
-    private final String address;
-    private final String containerType;
-    private final String paymentMethod;
-    private final String gcashNumber;
-    private final String gcashName;
-    private final int gcashAmount;
-    private final int quantity;
+    private String name;
+    private String containerType;
+    private int quantity;
+    private String paymentMethod;
+    private String address;
+    private double gcashAmount;
 
    
-    public Customer(String name, String address, String containerType, String paymentMethod, String gcashNumber, 
-                    String gcashName, int gcashAmount, int quantity) {
+    public Customer(String name, String containerType, int quantity, String paymentMethod, String address) {
         this.name = name;
-        this.address = address;
         this.containerType = containerType;
-        this.paymentMethod = paymentMethod;
-        this.gcashNumber = gcashNumber;
-        this.gcashName = gcashName;
-        this.gcashAmount = gcashAmount;
         this.quantity = quantity;
-        
-        
+        this.paymentMethod = paymentMethod;
+        this.address = address;
+
+        if ("GCash".equals(paymentMethod)) {
+          
+            System.out.print("Enter GCash Amount: ");
+            this.gcashAmount = new java.util.Scanner(System.in).nextDouble();
+        }
     }
 
+   
     public String getName() {
         return name;
-    }
-
-    public String getAddress() {
-        return address;
     }
 
     public String getContainerType() {
         return containerType;
     }
 
+    public int getQuantity() {
+        return quantity;
+    }
+
     public String getPaymentMethod() {
         return paymentMethod;
     }
 
-    public String getGcashNumber() {
-        return gcashNumber;
+    public String getAddress() {
+        return address;
     }
 
-    public String getGcashName() {
-        return gcashName;
-    }
-
-    public int getGcashAmount() {
+    public double getGcashAmount() {
         return gcashAmount;
     }
-    
-    public int getQuantity() {
-        return quantity;
-    }
-    
 }

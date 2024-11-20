@@ -1,4 +1,3 @@
-
 package waterrefillingsalesystem;
 
 import java.util.Scanner;
@@ -13,132 +12,99 @@ public class CustomerPanel {
     }
 
     public void showMenu() {
-        String name = "", address = "", containerType = "", paymentMethod = "", gcashNumber = "", gcashName = "";
-        int gcashAmount = 0, quantity = 0;  
-        boolean validOrder = false;
+        boolean continueShopping = true;
 
-        while (!validOrder) {
-            System.out.println("1. Enter Customer Name");
-            System.out.println("2. Select Barangay Address");
-            System.out.println("3. Select Container Type and Quantity");
-            System.out.println("4. Choose Payment Method");
-            System.out.println("5. Cancel Order");
+        while (continueShopping) {
+            System.out.println("Customer Menu:");
+            System.out.println("1. Make a Purchase");
+            System.out.println("2. Exit to Main Menu");
             System.out.print("Select an option: ");
             int option = scanner.nextInt();
-            scanner.nextLine(); 
-
+            scanner.nextLine();  
+            
             switch (option) {
-                case 1 -> {
-                    System.out.print("Enter Customer Name: ");
-                    name = scanner.nextLine();
-                }
-                case 2 -> {
-                    System.out.println("Select Barangay Address (Poblacion 1 - 12): ");
-                    for (int i = 1; i <= 12; i++) {
-                        System.out.println("[" + i + "] Poblacion " + i);
-                    }
-                    int barangayChoice = scanner.nextInt();
-                    scanner.nextLine();
-                    if (barangayChoice >= 1 && barangayChoice <= 12) {
-                        address = "Poblacion " + barangayChoice;
-                    } else {
-                        System.out.println("Invalid barangay choice.");
-                        continue; 
-                    }
-                }
-                case 3 -> {
-                    containerType = selectContainer(scanner);
-                    System.out.print("Enter Quantity: ");
-                    quantity = scanner.nextInt();
-                    scanner.nextLine();
-                }
-                case 4 -> paymentMethod = selectPaymentMethod(scanner, gcashNumber, gcashName, gcashAmount);
-                case 5 -> {
-                    System.out.println("Order has been canceled.");
-                    return;
-                }
-                default -> {
+                case 1:
+                    makePurchase();  
+                    break;
+                case 2:
+                    continueShopping = false;
+                    System.out.println("Returning to the Main Menu...\n");
+                    break;
+                default:
                     System.out.println("Invalid option. Please try again.");
-                    continue; 
-                }
-            }
-
-            if (isValidOrder(name, address, containerType, paymentMethod)) {
-                validOrder = true; 
-                system.addCustomer(new Customer(name, address, containerType, paymentMethod, gcashNumber, gcashName, gcashAmount, quantity));
-                System.out.println("Your refill order is placed successfully!");
             }
         }
+    }
 
+    private void makePurchase() {
+        System.out.println("\n--- Making a Purchase ---");
         
-        System.out.print("Do you want to make another refill order? (yes/no): ");
-        String repeatOrder = scanner.nextLine();
-        if (repeatOrder.equalsIgnoreCase("yes")) {
-            showMenu(); 
+      
+        System.out.print("Enter your name: ");
+        String name = scanner.nextLine();
+
+      
+        System.out.print("Enter Container Type (Small/Medium/Large/Extra Large): ");
+        String containerType = scanner.nextLine();
+        System.out.print("Enter Quantity: ");
+        int quantity = scanner.nextInt();
+        scanner.nextLine();  
+        System.out.print("Enter Payment Method (GCash/Cash on Delivery/Cash on Pick-Up): ");
+        String paymentMethod = scanner.nextLine();
+
+        System.out.print("Enter Your Barangay(Poblacion 1 - 12): ");
+        String address = scanner.nextLine();
+
+      
+        Customer customer = new Customer(name, containerType, quantity, paymentMethod, address);
+        system.addCustomer(customer);  
+
+      
+        printReceipt(customer);
+
+       
+        System.out.print("Would you like to make another purchase? (yes/no): ");
+        String choice = scanner.nextLine().toLowerCase();
+        if (choice.equals("no")) {
+            System.out.println("Returning to the Main Menu...\n");
+        } else if (!choice.equals("yes")) {
+            System.out.println("Invalid input, returning to the Main Menu...\n");
         }
     }
 
-    private boolean isValidOrder(String name, String address, String containerType, String paymentMethod) {
-        return !name.isEmpty() && !address.isEmpty() && !containerType.isEmpty() && !paymentMethod.isEmpty();
-    }
+  
+    private void printReceipt(Customer customer) {
+        double price = 0;
 
-    private String selectContainer(Scanner scanner) {
-        System.out.println("Select Container Type:");
-        System.out.println("[1] Small - P20.00");
-        System.out.println("[2] Medium - P30.00");
-        System.out.println("[3] Large - P40.00");
-        System.out.println("[4] Extra Large - P50.00");
-        int containerChoice = scanner.nextInt();
-        scanner.nextLine(); 
-        switch (containerChoice) {
-            case 1 -> {
-                return "Small";
-            }
-            case 2 -> { 
-                return "Medium";
-            }
-            case 3 -> {
-                return "Large";
-            }
-            case 4 -> {
-                return "Extra Large";
-            }
-            default -> {
-                System.out.println("Invalid container choice.");
-                return selectContainer(scanner); 
-            }
+       
+        switch (customer.getContainerType()) {
+            case "Small" -> price = 20.00;
+            case "Medium" -> price = 30.00;
+            case "Large" -> price = 40.00;
+            case "Extra Large" -> price = 50.00;
         }
-    }
+        price *= customer.getQuantity();
 
-    private String selectPaymentMethod(Scanner scanner, String gcashNumber, String gcashName, int gcashAmount) {
-        System.out.println("Select Payment Method:");
-        System.out.println("[1] Cash on Delivery");
-        System.out.println("[2] Cash on Pick-Up");
-        System.out.println("[3] GCash");
-        int paymentChoice = scanner.nextInt();
-        scanner.nextLine(); 
-        switch (paymentChoice) {
-            case 1 -> {
-                return "Cash on Delivery";
+      
+        if ("GCash".equals(customer.getPaymentMethod())) {
+            double amountPaid = customer.getGcashAmount();
+            double remainingAmount = price - amountPaid;
+            if (remainingAmount > 0) {
+                System.out.println("Remaining balance: P" + remainingAmount);
+            } else {
+                System.out.println("Change: P" + Math.abs(remainingAmount));
             }
-            case 2 -> {
-                return "Cash on Pick-Up";
-            }
-            case 3 -> {
-                System.out.print("Enter GCash Number: ");
-                gcashNumber = scanner.nextLine();
-                System.out.print("Enter GCash Name: ");
-                gcashName = scanner.nextLine();
-                System.out.print("Enter Amount: ");
-                gcashAmount = scanner.nextInt();
-                scanner.nextLine();  
-                return "GCash";
-            }
-            default -> {
-                System.out.println("Invalid payment option.");
-                return selectPaymentMethod(scanner, gcashNumber, gcashName, gcashAmount);
-            }
+            price = amountPaid;
         }
+
+       
+        System.out.println("\n--- Receipt ---");
+        System.out.println("Customer Name: " + customer.getName());
+        System.out.println("Container Type: " + customer.getContainerType());
+        System.out.println("Quantity: " + customer.getQuantity());
+        System.out.println("Payment Method: " + customer.getPaymentMethod());
+        System.out.println("Barangay: " + customer.getAddress());
+        System.out.println("Total Price: P" + price);
+        System.out.println("Thank you for your purchase!\n");
     }
 }
-

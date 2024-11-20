@@ -1,28 +1,31 @@
-
 package waterrefillingsalesystem;
 
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.HashMap; 
+import java.util.HashMap;
 
 public class WaterRefillingSystem {
-    private final List<Customer> customers;
-    private final Map<String, Integer> deliveries;
-    private double OverallSales;
+    private final List<Customer> customers; 
+    private final Map<String, Integer> deliveries; 
+    private final Map<String, Integer> containerSummary; 
+    private double overallSales;
 
     public WaterRefillingSystem() {
         customers = new ArrayList<>();
         deliveries = new HashMap<>();
-        OverallSales = 0.0;
+        containerSummary = new HashMap<>();
+        overallSales = 0.0;
     }
 
     public void addCustomer(Customer customer) {
         customers.add(customer);
-        recordSale(customer);
-        incrementDeliveryCount(customer.getAddress());
+        recordSale(customer);  
+        incrementDeliveryCount(customer);  
+        updateContainerSummary(customer);  
     }
 
+   
     private void recordSale(Customer customer) {
         double price = 0;
         switch (customer.getContainerType()) {
@@ -43,36 +46,59 @@ public class WaterRefillingSystem {
             }
             price = amountPaid;
         }
-        OverallSales += price;
+        overallSales += price;  
         System.out.println("Sale recorded: P" + price);
     }
 
-    private void incrementDeliveryCount(String address) {
-        deliveries.put(address, deliveries.getOrDefault(address, 0) + 1);
+   
+    private void incrementDeliveryCount(Customer customer) {
+        String barangay = customer.getAddress();
+        if ("Cash on Delivery".equalsIgnoreCase(customer.getPaymentMethod()) || 
+            "Cash on Pick-Up".equalsIgnoreCase(customer.getPaymentMethod())) {
+            deliveries.put(barangay, deliveries.getOrDefault(barangay, 0) + 1);
+        }
     }
 
-    public int getWalkInCount() {
-        return (int) customers.stream().filter(c -> c.getPaymentMethod().equals("Cash on Pick-Up")).count();
+   
+    private void updateContainerSummary(Customer customer) {
+        String containerType = customer.getContainerType();
+        containerSummary.put(containerType, containerSummary.getOrDefault(containerType, 0) + customer.getQuantity());
     }
 
-    public int getDeliveryCount() {
-       return (int) customers.stream().filter(c -> c.getPaymentMethod().equals("Cash On Delivery")).count();
+    
+    public double getOverallSales() {
+        return overallSales;
     }
 
-    public Map<String, Integer> getDeliveriesPerBarangay() {
+  
+    public Map<String, Integer> getDeliveriesByBarangay() {
         return deliveries;
     }
 
-    public double getOverallSales() {
-        return OverallSales;
+   
+    public Map<String, Integer> getContainerSummary() {
+        return containerSummary;
     }
 
-    public void summaryByContainer() {
-        Map<String, Integer> containerSummary = new HashMap<>();
+   
+    public int getWalkInCount() {
+        int walkInCount = 0;
         for (Customer customer : customers) {
-            containerSummary.put(customer.getContainerType(),
-                containerSummary.getOrDefault(customer.getContainerType(), 0) + 1);
+            if ("Cash on Pick-Up".equalsIgnoreCase(customer.getPaymentMethod())) {
+                walkInCount++;
+            }
         }
-        System.out.println("Container Summary: " + containerSummary);
+        return walkInCount;
+    }
+
+ 
+    public int getTotalDeliveries() {
+        int deliveryCount = 0;
+        for (Customer customer : customers) {
+            if ("Cash on Delivery".equalsIgnoreCase(customer.getPaymentMethod())) {
+                deliveryCount++;
+            }
+        }
+        return deliveryCount;
     }
 }
