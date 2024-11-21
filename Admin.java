@@ -2,7 +2,7 @@ package waterrefillingsalesystem;
 
 public class Admin {
     private final String name;
-    private final String username;
+    private String username;
     private final String email;
     private String password;  
 
@@ -29,8 +29,11 @@ public class Admin {
         return email;
     }
 
-   
     public void setPassword(String newPassword) {
         this.password = newPassword;
+    }
+
+    public void setUsername(String newUsername) {
+        this.username = newUsername;
     }
 }

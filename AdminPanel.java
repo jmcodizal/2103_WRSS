@@ -1,26 +1,118 @@
 package waterrefillingsalesystem;
 
 import java.util.Scanner;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AdminPanel {
     private final Scanner scanner;
     private final WaterRefillingSystem system;
+    private Map<String, Admin> admins;
 
     public AdminPanel(Scanner scanner, WaterRefillingSystem system) {
         this.scanner = scanner;
         this.system = system;
+        this.admins = new HashMap<>();
     }
 
     void showAdminMenu() {
-        System.out.println("Admin Panel - Login / Sign-Up");
-        System.out.print("Enter admin username: ");
+        boolean showMenu = true;
+
+        while (showMenu) {
+            System.out.println("Admin Panel - Login / Sign-Up");
+            System.out.println("1. Login");
+            System.out.println("2. Sign-Up");
+            System.out.println("3. Exit");
+            System.out.print("Select an option: ");
+            int option = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (option) {
+                case 1 -> login();
+                case 2 -> signUp();
+                case 3 -> {
+                    showMenu = false;
+                    System.out.println("Exiting Admin Panel.");
+                }
+                default -> System.out.println("Invalid option. Please try again.");
+            }
+        }
+    }
+
+    private void login() {
+        System.out.print("Enter username: ");
         String username = scanner.nextLine();
-        System.out.print("Enter admin password: ");
+        System.out.print("Enter password: ");
         String password = scanner.nextLine();
 
-        System.out.println("Admin login successful!");
+        Admin admin = admins.get(username);
+        
+        if (admin != null && admin.getPassword().equals(password)) {
+            System.out.println("Login successful!");
+            showAdminOptions(admin); 
+        } else {
+            System.out.println("Invalid credentials.");
+            forgotCredentials(username);
+        }
+    }
 
+    private void forgotCredentials(String username) {
+        System.out.println("Do you want to reset your credentials?");
+        System.out.println("1. Yes");
+        System.out.println("2. No");
+        System.out.print("Select an option: ");
+        int option = scanner.nextInt();
+        scanner.nextLine(); 
+        
+        if (option == 1) {
+            resetCredentials(username);
+        } else {
+            System.out.println("Returning to the menu.");
+        }
+    }
+
+    private void resetCredentials(String username) {
+        System.out.print("Enter new username: ");
+        String newUsername = scanner.nextLine();
+        
+        System.out.print("Enter new password: ");
+        String newPassword = scanner.nextLine();
+
+        Admin admin = admins.get(username);
+        if (admin != null) {
+            admin.setPassword(newPassword); 
+            System.out.println("Password updated successfully.");
+            admins.remove(username);  
+            admins.put(newUsername, admin); 
+        } else {
+            System.out.println("No such username found.");
+        }
+    }
+
+    private void signUp() {
+        System.out.println("Sign-Up for Admin Account");
+        
+        System.out.print("Enter name: ");
+        String name = scanner.nextLine();
+        
+        System.out.print("Enter username: ");
+        String username = scanner.nextLine();
+        
+        System.out.print("Enter email: ");
+        String email = scanner.nextLine();
+        
+        System.out.print("Enter password: ");
+        String password = scanner.nextLine();
+        
+        Admin newAdmin = new Admin(name, username, email, password);
+        admins.put(username, newAdmin);
+        
+        System.out.println("Sign-up successful! You can now login.");
+    }
+
+    private void showAdminOptions(Admin admin) {
         boolean showMenu = true;
+        
         while (showMenu) {
             System.out.println("\nAdmin Options:");
             System.out.println("1. View Total Walk-ins");
@@ -43,7 +135,7 @@ public class AdminPanel {
                 case 4 -> showOverallSales();
                 case 5 -> showTotalSalesPerDay();
                 case 6 -> showSummaryByContainer();
-                case 7 -> showTotalGcashPayments(); 
+                case 7 -> showTotalGcashPayments();
                 case 8 -> {
                     showMenu = false;
                     System.out.println("Logged out successfully.");
@@ -66,12 +158,12 @@ public class AdminPanel {
     }
 
     private void showTotalWalkIns() {
-        int totalWalkIns = system.getWalkInCount();  
+        int totalWalkIns = system.getWalkInCount();
         System.out.println("Total Walk-ins (Cash on Pickup): " + totalWalkIns);
     }
 
     private void showTotalDeliveries() {
-        int totalDeliveries = system.getTotalDeliveries();  
+        int totalDeliveries = system.getTotalDeliveries();
         System.out.println("Total Deliveries (Cash on Delivery): " + totalDeliveries);
     }
 

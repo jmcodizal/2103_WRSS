@@ -10,11 +10,11 @@ public class WaterRefillingSystem {
     private final Map<String, Integer> deliveries;
     private final Map<String, Integer> containerSummary;
     private final Map<String, Double> dailySales;
-    private double overallSales;  // This will only include container sales
-    private int walkInCount;      // Track customers with Cash on Pickup
-    private int totalDeliveries;  // Track customers with Cash on Delivery
+    private double overallSales;  
+    private int walkInCount;    
+    private int totalDeliveries;  
     private final Map<String, Integer> deliveriesByBarangay;
-    private double totalGcashPayments;  // Track total GCash payments
+    private double totalGcashPayments;  
 
     public WaterRefillingSystem() {
         customers = new ArrayList<>();

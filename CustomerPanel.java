@@ -58,10 +58,11 @@ public class CustomerPanel {
         int quantity = scanner.nextInt();
         scanner.nextLine();  
 
+        
         double gcashAmount = 0;
         String gcashNumber = null;
         String gcashName = null;
-        
+
         if ("GCash".equalsIgnoreCase(paymentMethod)) {
             System.out.print("Enter GCash Number: ");
             gcashNumber = scanner.nextLine();
@@ -71,16 +72,24 @@ public class CustomerPanel {
 
             System.out.print("Enter GCash amount: P");
             gcashAmount = scanner.nextDouble();
-            scanner.nextLine(); 
+            scanner.nextLine();  // Consume newline
         }
 
-        String deliveryDate = null;  
+        String deliveryDate = null;
 
+       
+        if ("Cash on Delivery".equalsIgnoreCase(paymentMethod)) {
+            System.out.print("Enter preferred delivery date (YYYY-MM-DD): ");
+            deliveryDate = scanner.nextLine();
+        }
+
+        
         Customer customer = new Customer(name, containerType, quantity, paymentMethod, contactNumber, barangay, deliveryDate, gcashNumber, gcashName, gcashAmount);
-        system.addCustomer(customer);
+        system.addCustomer(customer);  
 
         printReceipt(customer);
 
+        
         System.out.print("Would you like to make another purchase? (yes/no): ");
         String choice = scanner.nextLine().toLowerCase();
         if (choice.equals("no")) {
@@ -104,28 +113,28 @@ public class CustomerPanel {
                 return;
             }
         }
-        price *= customer.getQuantity(); 
+        price *= customer.getQuantity();  
 
         double finalAmount = price;
         String amountPaid = "N/A";
         String change = "N/A";
         
+       
         if ("GCash".equalsIgnoreCase(customer.getPaymentMethod())) {
             double gcashAmount = customer.getGcashAmount();
             double remainingAmount = price - gcashAmount;
             
-         
             if (remainingAmount > 0) {
                 amountPaid = "P" + gcashAmount;
                 change = "N/A"; 
             } else {
                 amountPaid = "P" + gcashAmount;
                 change = "P" + Math.abs(remainingAmount);
-                finalAmount = price; 
+                finalAmount = price;  
             }
         }
 
-     
+       
         System.out.println("\n--- Receipt ---");
         System.out.println("Customer Name: " + customer.getName());
         System.out.println("Barangay: " + customer.getBarangay());
@@ -135,14 +144,17 @@ public class CustomerPanel {
         System.out.println("Payment Method: " + customer.getPaymentMethod());
         System.out.println("Total Price: P" + price);
 
-       
         if ("GCash".equalsIgnoreCase(customer.getPaymentMethod())) {
             System.out.println("Amount Paid: " + amountPaid);
             System.out.println("Change: " + change);
         } else if ("Cash on Delivery".equalsIgnoreCase(customer.getPaymentMethod()) || "Cash on Pick-Up".equalsIgnoreCase(customer.getPaymentMethod())) {
-            
             System.out.println("Amount Paid: N/A");
-            System.out.println("Final Amount: N/A");
+            System.out.println("Final Amount: P" + price);
+        }
+
+       
+        if ("Cash on Delivery".equalsIgnoreCase(customer.getPaymentMethod())) {
+            System.out.println("Preferred Delivery Date: " + customer.getDeliveryDate());
         }
 
         System.out.println("Thank you for your purchase!\n");
