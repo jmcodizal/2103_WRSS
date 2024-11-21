@@ -1,31 +1,40 @@
 package waterrefillingsalesystem;
 
 public class Customer {
-    private String name;
-    private String containerType;
-    private int quantity;
-    private String paymentMethod;
-    private String address;
+    private final String name;
+    private final String containerType;
+    private final int quantity;
+    private final String paymentMethod;
+    private final String barangay;
+    private final String contactNumber;
     private double gcashAmount;
+    private final String deliveryDate;
+    private final String gcashNumber;
+    private final String gcashName;
 
-   
-    public Customer(String name, String containerType, int quantity, String paymentMethod, String address) {
+    public Customer(String name, String containerType, int quantity, String paymentMethod, String contactNumber, String barangay, String deliveryDate, String gcashNumber, String gcashName, double gcashAmount) {
         this.name = name;
         this.containerType = containerType;
         this.quantity = quantity;
         this.paymentMethod = paymentMethod;
-        this.address = address;
-
-        if ("GCash".equals(paymentMethod)) {
-          
-            System.out.print("Enter GCash Amount: ");
-            this.gcashAmount = new java.util.Scanner(System.in).nextDouble();
-        }
+        this.contactNumber = contactNumber;
+        this.barangay = barangay;
+        this.deliveryDate = deliveryDate;
+        this.gcashNumber = gcashNumber;
+        this.gcashName = gcashName;
+        this.gcashAmount = gcashAmount;
     }
 
-   
     public String getName() {
         return name;
+    }
+
+    public String getBarangay() {
+        return barangay;
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
     }
 
     public String getContainerType() {
@@ -40,11 +49,19 @@ public class Customer {
         return paymentMethod;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
     public double getGcashAmount() {
         return gcashAmount;
+    }
+
+    public String getDeliveryDate() {
+        return deliveryDate;
+    }
+
+    public String getGcashNumber() {
+        return gcashNumber;
+    }
+
+    public String getGcashName() {
+        return gcashName;
     }
 }
