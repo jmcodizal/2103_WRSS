@@ -187,16 +187,44 @@ public class AdminPanel {
         });
     }
     
-    private void showSalesPerBarangayByDay() {
+   private void showSalesPerBarangayByDay() {
     System.out.println("Sales Per Barangay by Day:");
 
-   
-    system.getSalesByBarangayPerDay().forEach((barangay, salesByDate) -> {
-        System.out.println("Barangay: " + barangay);
-        salesByDate.forEach((date, sales) -> {
-            System.out.println("  Date: " + date + " - Total Sales: P" + sales);
-        });
-    });
+ 
+    String[] barangays = {
+        "Poblacion 1", "Poblacion 2", "Poblacion 3", "Poblacion 4", "Poblacion 5",
+        "Poblacion 6", "Poblacion 7", "Poblacion 8", "Poblacion 9", "Poblacion 10",
+        "Poblacion 11", "Poblacion 12"
+    };
+
+  
+    for (String barangay : barangays) {
+        double totalSalesForBarangay = 0.0;
+
+        
+        Map<String, Double> salesByDate = system.getSalesByBarangayPerDay().get(barangay);
+
+        
+        if (salesByDate != null && !salesByDate.isEmpty()) {
+            System.out.println("Barangay: " + barangay);
+            
+            for (Map.Entry<String, Double> entry : salesByDate.entrySet()) {
+                String date = entry.getKey();
+                double sales = entry.getValue();
+                System.out.println("  Date: " + date + " - Total Sales: P" + sales);
+                totalSalesForBarangay += sales;  
+            }
+        } else {
+           
+            System.out.println("Barangay: " + barangay + " has no sales recorded.");
+        }
+
+      
+        System.out.println("  Total Sales for " + barangay + ": P" + totalSalesForBarangay);
+    }
 }
 
 }
+
+
+
