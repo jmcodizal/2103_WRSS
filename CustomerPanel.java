@@ -48,7 +48,7 @@ public class CustomerPanel {
         System.out.print("Enter your contact number: ");
         String contactNumber = scanner.nextLine();
 
-        System.out.print("Enter Payment Method (GCash/Cash on Delivery/Cash on PickUp): ");
+        System.out.print("Enter Payment Method (GCash/Cash on Delivery/Cash on Pickup): ");
         String paymentMethod = scanner.nextLine();
 
         System.out.print("Enter Container Type (Small/Medium/Large/Extra Large): ");

@@ -15,18 +15,20 @@ public class WaterRefillingSystem {
     private int totalDeliveries;  
     private final Map<String, Integer> deliveriesByBarangay;
     private double totalGcashPayments;  
+    private final Map<String, Map<String, Double>> salesByBarangayPerDay;
 
-    public WaterRefillingSystem() {
-        customers = new ArrayList<>();
-        deliveries = new HashMap<>();
-        containerSummary = new HashMap<>();
-        dailySales = new HashMap<>();
-        deliveriesByBarangay = new HashMap<>();
-        overallSales = 0.0;
-        walkInCount = 0;
-        totalDeliveries = 0;
-        totalGcashPayments = 0.0;
-    }
+   public WaterRefillingSystem() {
+    customers = new ArrayList<>();
+    deliveries = new HashMap<>();
+    containerSummary = new HashMap<>();
+    dailySales = new HashMap<>();
+    deliveriesByBarangay = new HashMap<>();
+    salesByBarangayPerDay = new HashMap<>();  
+    overallSales = 0.0;
+    walkInCount = 0;
+    totalDeliveries = 0;
+    totalGcashPayments = 0.0;
+}
 
     public void addCustomer(Customer customer) {
         customers.add(customer);
@@ -55,32 +57,36 @@ public class WaterRefillingSystem {
         }
     }
 
-    private void recordSale(Customer customer) {
-        double containerSales = 0.0;
+   private void recordSale(Customer customer) {
+    double containerSales = 0.0;
 
-        
-        switch (customer.getContainerType()) {
-            case "Small" -> containerSales = 20.00 * customer.getQuantity();
-            case "Medium" -> containerSales = 30.00 * customer.getQuantity();
-            case "Large" -> containerSales = 40.00 * customer.getQuantity();
-            case "Extra Large" -> containerSales = 50.00 * customer.getQuantity();
-            default -> System.out.println("Invalid container type for customer: " + customer.getName());
-        }
-
-        
-        overallSales += containerSales;
-
-      
-        String today = java.time.LocalDate.now().toString();
-        dailySales.put(today, dailySales.getOrDefault(today, 0.0) + containerSales);
-
-       
-        if ("GCash".equals(customer.getPaymentMethod())) {
-            totalGcashPayments += customer.getGcashAmount();
-        }
-
-        System.out.println("Sale recorded: P" + containerSales);
+  
+    switch (customer.getContainerType()) {
+        case "Small" -> containerSales = 20.00 * customer.getQuantity();
+        case "Medium" -> containerSales = 30.00 * customer.getQuantity();
+        case "Large" -> containerSales = 40.00 * customer.getQuantity();
+        case "Extra Large" -> containerSales = 50.00 * customer.getQuantity();
+        default -> System.out.println("Invalid container type for customer: " + customer.getName());
     }
+
+    overallSales += containerSales;
+
+    
+    String today = java.time.LocalDate.now().toString();
+
+   
+    String barangay = customer.getBarangay();
+    salesByBarangayPerDay
+        .computeIfAbsent(barangay, k -> new HashMap<>())  
+        .put(today, salesByBarangayPerDay.get(barangay).getOrDefault(today, 0.0) + containerSales);
+
+   
+    if ("GCash".equals(customer.getPaymentMethod())) {
+        totalGcashPayments += customer.getGcashAmount();
+    }
+
+    System.out.println("Sale recorded: P" + containerSales);
+}
 
     public double getTotalGcashPayments() {
         return totalGcashPayments; 
@@ -124,4 +130,9 @@ public class WaterRefillingSystem {
     public int getTotalDeliveries() {
         return totalDeliveries; 
     }
+    
+    public Map<String, Map<String, Double>> getSalesByBarangayPerDay() {
+        return salesByBarangayPerDay;
+    }
+
 }

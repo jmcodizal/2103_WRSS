@@ -111,39 +111,40 @@ public class AdminPanel {
     }
 
     private void showAdminOptions(Admin admin) {
-        boolean showMenu = true;
+    boolean showMenu = true;
+    
+    while (showMenu) {
+        System.out.println("\nAdmin Options:");
+        System.out.println("1. View Total Walk-ins");
+        System.out.println("2. View Total Deliveries");
+        System.out.println("3. View Deliveries by Barangay");
+        System.out.println("4. View Overall Sales");
+        System.out.println("5. View Sales Per Barangay by Day");  
+        System.out.println("6. View Summary by Container");
+        System.out.println("7. View Total GCash Payments");
+        System.out.println("8. Logout");
+        System.out.print("Select an option: ");
         
-        while (showMenu) {
-            System.out.println("\nAdmin Options:");
-            System.out.println("1. View Total Walk-ins");
-            System.out.println("2. View Total Deliveries");
-            System.out.println("3. View Deliveries by Barangay");
-            System.out.println("4. View Overall Sales");
-            System.out.println("5. View Total Sales Per Day");
-            System.out.println("6. View Summary by Container");
-            System.out.println("7. View Total GCash Payments");
-            System.out.println("8. Logout");
-            System.out.print("Select an option: ");
-            
-            int option = scanner.nextInt();
-            scanner.nextLine(); 
+        int option = scanner.nextInt();
+        scanner.nextLine(); 
 
-            switch (option) {
-                case 1 -> showTotalWalkIns();
-                case 2 -> showTotalDeliveries();
-                case 3 -> showDeliveriesByBarangay();
-                case 4 -> showOverallSales();
-                case 5 -> showTotalSalesPerDay();
-                case 6 -> showSummaryByContainer();
-                case 7 -> showTotalGcashPayments();
-                case 8 -> {
-                    showMenu = false;
-                    System.out.println("Logged out successfully.");
-                }
-                default -> System.out.println("Invalid option. Please try again.");
+        switch (option) {
+            case 1 -> showTotalWalkIns();
+            case 2 -> showTotalDeliveries();
+            case 3 -> showDeliveriesByBarangay();
+            case 4 -> showOverallSales();
+            case 5 -> showSalesPerBarangayByDay();  
+            case 6 -> showSummaryByContainer();
+            case 7 -> showTotalGcashPayments();
+            case 8 -> {
+                showMenu = false;
+                System.out.println("Logged out successfully.");
             }
+            default -> System.out.println("Invalid option. Please try again.");
         }
     }
+}
+
 
     private void showTotalGcashPayments() {
         double totalGcashPayments = system.getTotalGcashPayments();
@@ -185,4 +186,17 @@ public class AdminPanel {
             System.out.println(container + ": " + count);
         });
     }
+    
+    private void showSalesPerBarangayByDay() {
+    System.out.println("Sales Per Barangay by Day:");
+
+   
+    system.getSalesByBarangayPerDay().forEach((barangay, salesByDate) -> {
+        System.out.println("Barangay: " + barangay);
+        salesByDate.forEach((date, sales) -> {
+            System.out.println("  Date: " + date + " - Total Sales: P" + sales);
+        });
+    });
+}
+
 }
