@@ -1,11 +1,20 @@
 package waterrefillingsalesystem;
 
+import java.sql.Connection;
 import java.util.Scanner;
+import DBConnector.ControlConnector; 
 
 public class WaterRefillingSaleSystem {
     public static void main(String[] args) {
         try (Scanner scanner = new Scanner(System.in)) {
-            WaterRefillingSystem system = new WaterRefillingSystem();
+        
+            Connection connection = ControlConnector.getCon(); 
+
+            
+           WaterRefillingSystem system = new WaterRefillingSystem(connection);  
+
+
+           
             boolean exitSystem = false;
 
             while (!exitSystem) {
@@ -18,21 +27,36 @@ public class WaterRefillingSaleSystem {
                 scanner.nextLine();
 
                 switch (role) {
-                    case 1 -> {
-                        CustomerPanel customerPanel = new CustomerPanel(scanner, system);
+                    case 1:
+                       
+                        CustomerPanel customerPanel = new CustomerPanel(scanner, system, connection); 
                         customerPanel.showMenu();
-                    }
-                    case 2 -> {
+                        break;
+
+                    case 2:
+                       
                         AdminPanel adminPanel = new AdminPanel(scanner, system);
                         adminPanel.showAdminMenu();
-                    }
-                    case 3 -> {
+                        break;
+
+                    case 3:
+                       
                         exitSystem = true;
                         System.out.println("Exiting the system...");
-                    }
-                    default -> System.out.println("Invalid option.");
+                        break;
+
+                    default:
+                        System.out.println("Invalid option. Please try again.");
                 }
             }
+
+           
+            if (connection != null) {
+                connection.close();
+                System.out.println("Database connection closed.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); 
         }
     }
 }

@@ -5,14 +5,19 @@ public class Customer {
     private final String containerType;
     private final int quantity;
     private final String paymentMethod;
-    private final String barangay;
     private final String contactNumber;
-    private double gcashAmount;
+    private final String barangay;
     private final String deliveryDate;
     private final String gcashNumber;
     private final String gcashName;
+    private final double gcashAmount;
+    private final String salesDate;
+    private final String ContactNumber;
 
-    public Customer(String name, String containerType, int quantity, String paymentMethod, String contactNumber, String barangay, String deliveryDate, String gcashNumber, String gcashName, double gcashAmount) {
+   
+    public Customer(String name, String containerType, int quantity, String paymentMethod, 
+                    String contactNumber, String barangay, String deliveryDate, 
+                    String gcashNumber, String gcashName, double gcashAmount) {
         this.name = name;
         this.containerType = containerType;
         this.quantity = quantity;
@@ -23,18 +28,13 @@ public class Customer {
         this.gcashNumber = gcashNumber;
         this.gcashName = gcashName;
         this.gcashAmount = gcashAmount;
+        this.salesDate = java.time.LocalDate.now().toString();  
+        this.ContactNumber = contactNumber;  
     }
 
+ 
     public String getName() {
         return name;
-    }
-
-    public String getBarangay() {
-        return barangay;
-    }
-
-    public String getContactNumber() {
-        return contactNumber;
     }
 
     public String getContainerType() {
@@ -49,8 +49,12 @@ public class Customer {
         return paymentMethod;
     }
 
-    public double getGcashAmount() {
-        return gcashAmount;
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public String getBarangay() {
+        return barangay;
     }
 
     public String getDeliveryDate() {
@@ -63,5 +67,13 @@ public class Customer {
 
     public String getGcashName() {
         return gcashName;
+    }
+
+    public double getGcashAmount() {
+        return gcashAmount;
+    }
+
+    public String getSalesDate() {
+        return salesDate;
     }
 }

@@ -1,20 +1,27 @@
 package waterrefillingsalesystem;
 
+import java.sql.*;
 import java.util.Scanner;
 import java.util.HashMap;
 import java.util.Map;
+import org.json.JSONObject;
+import DBConnector.ControlConnector;  
 
 public class AdminPanel {
     private final Scanner scanner;
     private final WaterRefillingSystem system;
-    private Map<String, Admin> admins;
+    private final Map<String, Admin> admins;
+    private final Connection connection;  
 
+    
     public AdminPanel(Scanner scanner, WaterRefillingSystem system) {
         this.scanner = scanner;
         this.system = system;
         this.admins = new HashMap<>();
+        this.connection = ControlConnector.getCon(); 
     }
 
+   
     void showAdminMenu() {
         boolean showMenu = true;
 
@@ -39,31 +46,40 @@ public class AdminPanel {
         }
     }
 
+  
     private void login() {
         System.out.print("Enter username: ");
         String username = scanner.nextLine();
         System.out.print("Enter password: ");
         String password = scanner.nextLine();
 
-        Admin admin = admins.get(username);
-        
-        if (admin != null && admin.getPassword().equals(password)) {
-            System.out.println("Login successful!");
-            showAdminOptions(admin); 
-        } else {
-            System.out.println("Invalid credentials.");
-            forgotCredentials(username);
+       
+        String query = "SELECT * FROM Admin WHERE Username = ? AND Password = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, username);
+            stmt.setString(2, password);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                System.out.println("Login successful!");
+                showAdminOptions();
+            } else {
+                System.out.println("Invalid credentials.");
+                forgotCredentials(username);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
+  
     private void forgotCredentials(String username) {
         System.out.println("Do you want to reset your credentials?");
         System.out.println("1. Yes");
         System.out.println("2. No");
         System.out.print("Select an option: ");
         int option = scanner.nextInt();
-        scanner.nextLine(); 
-        
+        scanner.nextLine();
+
         if (option == 1) {
             resetCredentials(username);
         } else {
@@ -71,160 +87,214 @@ public class AdminPanel {
         }
     }
 
+   
     private void resetCredentials(String username) {
         System.out.print("Enter new username: ");
         String newUsername = scanner.nextLine();
-        
         System.out.print("Enter new password: ");
         String newPassword = scanner.nextLine();
 
-        Admin admin = admins.get(username);
-        if (admin != null) {
-            admin.setPassword(newPassword); 
-            System.out.println("Password updated successfully.");
-            admins.remove(username);  
-            admins.put(newUsername, admin); 
-        } else {
-            System.out.println("No such username found.");
+       
+        String query = "UPDATE Admin SET Username = ?, Password = ? WHERE Username = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, newUsername);
+            stmt.setString(2, newPassword);  
+            stmt.setString(3, username);
+            int rowsUpdated = stmt.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("Credentials updated successfully.");
+            } else {
+                System.out.println("Admin not found.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
+   
     private void signUp() {
         System.out.println("Sign-Up for Admin Account");
-        
         System.out.print("Enter name: ");
         String name = scanner.nextLine();
-        
         System.out.print("Enter username: ");
         String username = scanner.nextLine();
-        
         System.out.print("Enter email: ");
         String email = scanner.nextLine();
-        
         System.out.print("Enter password: ");
         String password = scanner.nextLine();
-        
-        Admin newAdmin = new Admin(name, username, email, password);
-        admins.put(username, newAdmin);
-        
-        System.out.println("Sign-up successful! You can now login.");
-    }
 
-    private void showAdminOptions(Admin admin) {
-    boolean showMenu = true;
-    
-    while (showMenu) {
-        System.out.println("\nAdmin Options:");
-        System.out.println("1. View Total Walk-ins");
-        System.out.println("2. View Total Deliveries");
-        System.out.println("3. View Deliveries by Barangay");
-        System.out.println("4. View Overall Sales");
-        System.out.println("5. View Sales Per Barangay by Day");  
-        System.out.println("6. View Summary by Container");
-        System.out.println("7. View Total GCash Payments");
-        System.out.println("8. Logout");
-        System.out.print("Select an option: ");
-        
-        int option = scanner.nextInt();
-        scanner.nextLine(); 
-
-        switch (option) {
-            case 1 -> showTotalWalkIns();
-            case 2 -> showTotalDeliveries();
-            case 3 -> showDeliveriesByBarangay();
-            case 4 -> showOverallSales();
-            case 5 -> showSalesPerBarangayByDay();  
-            case 6 -> showSummaryByContainer();
-            case 7 -> showTotalGcashPayments();
-            case 8 -> {
-                showMenu = false;
-                System.out.println("Logged out successfully.");
-            }
-            default -> System.out.println("Invalid option. Please try again.");
+     
+        String query = "INSERT INTO Admin (Name, Username, Email, Password) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, name);
+            stmt.setString(2, username);
+            stmt.setString(3, email);
+            stmt.setString(4, password);  
+            stmt.executeUpdate();
+            System.out.println("Sign-up successful! You can now login.");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
-}
 
+   
+    private void showAdminOptions() {
+        boolean showMenu = true;
 
-    private void showTotalGcashPayments() {
-        double totalGcashPayments = system.getTotalGcashPayments();
-        System.out.println("Total GCash Payments: P" + totalGcashPayments);
+        while (showMenu) {
+            System.out.println("\nAdmin Options:");
+            System.out.println("1. View Total Walk-ins");
+            System.out.println("2. View Total Deliveries");
+            System.out.println("3. View Deliveries by Barangay");
+            System.out.println("4. View Overall Sales");
+            System.out.println("5. View Sales Per Barangay by Day");
+            System.out.println("6. View Summary by Container");
+            System.out.println("7. View Total GCash Payments");
+            System.out.println("8. Logout");
+            System.out.print("Select an option: ");
+
+            int option = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (option) {
+                case 1 -> showTotalWalkIns();
+                case 2 -> showTotalDeliveries();
+                case 3 -> showDeliveriesByBarangay();
+                case 4 -> showOverallSales();
+                case 5 -> showSalesPerBarangayByDay();
+                case 6 -> showSummaryByContainer();
+                case 7 -> showTotalGcashPayments();
+                case 8 -> {
+                    showMenu = false;
+                    System.out.println("Logged out successfully.");
+                }
+                default -> System.out.println("Invalid option. Please try again.");
+            }
+        }
     }
-
-    private void showTotalSalesPerDay() {
-        System.out.println("Total Sales Per Day:");
-        system.getDailySales().forEach((date, sales) -> {
-            System.out.println(date + ": P" + sales);
-        });
-    }
-
-    private void showTotalWalkIns() {
-        int totalWalkIns = system.getWalkInCount();
-        System.out.println("Total Walk-ins (Cash on Pickup): " + totalWalkIns);
-    }
-
-    private void showTotalDeliveries() {
-        int totalDeliveries = system.getTotalDeliveries();
-        System.out.println("Total Deliveries (Cash on Delivery): " + totalDeliveries);
-    }
-
-    private void showDeliveriesByBarangay() {
-        System.out.println("Deliveries by Barangay:");
-        system.getDeliveriesByBarangay().forEach((barangay, count) -> {
-            System.out.println(barangay + ": " + count + " orders");
-        });
-    }
-
-    private void showOverallSales() {
-        double overallSales = system.getOverallSales();
-        System.out.println("Overall Sales: P" + overallSales);
-    }
-
-    private void showSummaryByContainer() {
-        System.out.println("Container Summary:");
-        system.getContainerSummary().forEach((container, count) -> {
-            System.out.println(container + ": " + count);
-        });
-    }
-    
-   private void showSalesPerBarangayByDay() {
-    System.out.println("Sales Per Barangay by Day:");
 
  
-    String[] barangays = {
-        "Poblacion 1", "Poblacion 2", "Poblacion 3", "Poblacion 4", "Poblacion 5",
-        "Poblacion 6", "Poblacion 7", "Poblacion 8", "Poblacion 9", "Poblacion 10",
-        "Poblacion 11", "Poblacion 12"
-    };
+    private void showTotalGcashPayments() {
+        String query = "SELECT TotalGcashPayments FROM SystemMetrics WHERE DateRecorded = CURRENT_DATE";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                double totalGcashPayments = rs.getDouble("TotalGcashPayments");
+                System.out.println("Total GCash Payments: P" + totalGcashPayments);
+            } else {
+                System.out.println("No data found for today's GCash payments.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
   
-    for (String barangay : barangays) {
-        double totalSalesForBarangay = 0.0;
-
-        
-        Map<String, Double> salesByDate = system.getSalesByBarangayPerDay().get(barangay);
-
-        
-        if (salesByDate != null && !salesByDate.isEmpty()) {
-            System.out.println("Barangay: " + barangay);
-            
-            for (Map.Entry<String, Double> entry : salesByDate.entrySet()) {
-                String date = entry.getKey();
-                double sales = entry.getValue();
-                System.out.println("  Date: " + date + " - Total Sales: P" + sales);
-                totalSalesForBarangay += sales;  
+    private void showTotalWalkIns() {
+        String query = "SELECT TotalWalkIns FROM SystemMetrics WHERE DateRecorded = CURRENT_DATE";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                int totalWalkIns = rs.getInt("TotalWalkIns");
+                System.out.println("Total Walk-ins (Cash on Pickup): " + totalWalkIns);
+            } else {
+                System.out.println("No data found for today's walk-ins.");
             }
-        } else {
-           
-            System.out.println("Barangay: " + barangay + " has no sales recorded.");
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+    }
 
-      
-        System.out.println("  Total Sales for " + barangay + ": P" + totalSalesForBarangay);
+   
+    private void showTotalDeliveries() {
+        String query = "SELECT TotalDeliveries FROM SystemMetrics WHERE DateRecorded = CURRENT_DATE";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                int totalDeliveries = rs.getInt("TotalDeliveries");
+                System.out.println("Total Deliveries (Cash on Delivery): " + totalDeliveries);
+            } else {
+                System.out.println("No data found for today's deliveries.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+   
+    private void showDeliveriesByBarangay() {
+        String query = "SELECT BarangayName, DeliveryCount FROM BarangayDeliveries";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            ResultSet rs = stmt.executeQuery();
+            System.out.println("Deliveries by Barangay:");
+            while (rs.next()) {
+                String barangayName = rs.getString("BarangayName");
+                int deliveryCount = rs.getInt("DeliveryCount");
+                System.out.println(barangayName + ": " + deliveryCount + " orders");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+   
+    private void showOverallSales() {
+        String query = "SELECT TotalSales FROM SystemMetrics WHERE DateRecorded = CURRENT_DATE";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                double totalSales = rs.getDouble("TotalSales");
+                System.out.println("Overall Sales: P" + totalSales);
+            } else {
+                System.out.println("No data found for today's overall sales.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+   
+    private void showSummaryByContainer() {
+        String query = "SELECT ContainerType, TotalQuantitySold FROM ContainerSummary";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            ResultSet rs = stmt.executeQuery();
+            System.out.println("Container Summary:");
+            while (rs.next()) {
+                String containerType = rs.getString("ContainerType");
+                int totalQuantitySold = rs.getInt("TotalQuantitySold");
+                System.out.println(containerType + ": " + totalQuantitySold);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+   
+    private void showSalesPerBarangayByDay() {
+        String query = "SELECT SalesDate, SalesByBarangay FROM DailySales";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            ResultSet rs = stmt.executeQuery();
+            System.out.println("Sales Per Barangay by Day:");
+            while (rs.next()) {
+                String salesDate = rs.getString("SalesDate");
+                String salesByBarangayJson = rs.getString("SalesByBarangay");
+                
+                System.out.println("Date: " + salesDate);
+                displaySalesByBarangay(salesByBarangayJson); 
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void displaySalesByBarangay(String salesJson) {
+        try {
+            JSONObject jsonObject = new JSONObject(salesJson);  
+            jsonObject.keys().forEachRemaining(barangay -> {
+                System.out.println(barangay + ": P" + jsonObject.getDouble(barangay));
+            });
+        } catch (Exception e) {
+            System.out.println("Error parsing JSON: " + e.getMessage());
+        }
     }
 }
-
-}
-
-
-
