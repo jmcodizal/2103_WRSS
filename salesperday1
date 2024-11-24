@@ -1,0 +1,55 @@
+
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package WaterRefillingSaleSystem;
+
+import javax.swing.*;
+import java.awt.*;
+
+/**
+ * GUI for displaying Sales Per Day
+ */
+public class SalesPerDayUI extends JFrame {
+
+    public SalesPerDayUI() {
+        // Set the title of the JFrame
+        setTitle("Sales Per Day");
+        
+        // Set the size of the JFrame
+        setSize(8, 10);
+        
+        // Set default close operation
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        
+        // Create a label for the top
+        JLabel label = new JLabel("Sales Per Day Summary", JLabel.CENTER);
+        
+        // Sample data for a table
+        String[] columnNames = {"Date", "Total Sales"};
+        Object[][] data = {
+            {"2024-11-20", "500.00"},
+            {"2024-11-21", "300.00"},
+            {"2024-11-22", "400.00"},
+        };
+        
+        // Create a JTable with sample data
+        JTable table = new JTable(data, columnNames);
+        
+        // Wrap the table in a JScrollPane for scrollable view
+        JScrollPane scrollPane = new JScrollPane(table);
+        
+        // Add components to the JFrame
+        add(label, BorderLayout.NORTH);
+        add(scrollPane, BorderLayout.CENTER);
+        
+        // Make the frame visible
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        // Test the SalesPerDayUI independently
+        SalesPerDayUI SalesPerDayUI = new SalesPerDayUI();
+    }
+}
